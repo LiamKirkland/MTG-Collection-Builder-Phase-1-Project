@@ -5,7 +5,16 @@
     <link rel="stylesheet" href="./src/style.css">
   </head>
   <body>
-
+    <h1>Collection Builder</h1>
+    <form id="searchForm">
+      <input type="text" name="query" minlength="3" placeholder="Search for a card..." required />
+      <input type="submit" name="submit" />
+      <input type="button" name="randSearch" value="Random" />
+    </form>
+    <div id="search-container">
+      <ul id="search-results"></ul>
+      <div class="card-info-container" id="search-info-container"></div>
+    </div>
     <script src="./src/script.js"></script>
   </body>
 </html>
