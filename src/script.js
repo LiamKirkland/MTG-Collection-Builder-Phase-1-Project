@@ -33,7 +33,7 @@ function getCards(query) {
             "data-set": card.set_name,
             "data-artist": card.artist,
             "data-flavor-text": card.flavor_text,
-            "data-oracle-text": card.oracle_text,
+            "data-oracle-text": card.oracle_text.replace(/\n/g, ", "),
             "data-type-line": card.type_line,
           }
 
@@ -48,7 +48,7 @@ function getCards(query) {
             "data-set": card.set_name,
             "data-artist": card.artist,
             "data-flavor-text": card.flavor_text,
-            "data-oracle-text": card.oracle_text,
+            "data-oracle-text": card.oracle_text.replace(/\n/g, ", "),
             "data-type-line": card.type_line,
           }
 
