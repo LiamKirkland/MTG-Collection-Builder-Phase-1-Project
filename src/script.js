@@ -24,8 +24,13 @@ function getCards(query) {
         console.log(card)
         const cardLi = createEle("li")
 
+        let oracleText = card.oracle_text
+          .replace(/\n/g, ", ")
+          .replace(/\.,/g, ".")
+
         if (card.flavor_name && card.flavor_name !== card.name) {
           cardLi.textContent = card.flavor_name
+          oracleText = oracleText.replaceAll(card.name, card.flavor_name)
           const attributes = {
             "data-flavor-name": card.flavor_name,
             "data-name": card.name,
@@ -33,7 +38,7 @@ function getCards(query) {
             "data-set": card.set_name,
             "data-artist": card.artist,
             "data-flavor-text": card.flavor_text,
-            "data-oracle-text": card.oracle_text.replace(/\n/g, ", "),
+            "data-oracle-text": oracleText,
             "data-type-line": card.type_line,
           }
 
@@ -48,7 +53,7 @@ function getCards(query) {
             "data-set": card.set_name,
             "data-artist": card.artist,
             "data-flavor-text": card.flavor_text,
-            "data-oracle-text": card.oracle_text.replace(/\n/g, ", "),
+            "data-oracle-text": oracleText,
             "data-type-line": card.type_line,
           }
 
@@ -84,8 +89,8 @@ function displayCardInfo(resultLi) {
   pArr[3].textContent = card.oracleText
   pArr[4].textContent = card.flavorText
 
-  for(const p of pArr) {
-    if(p.textContent == "undefined" || p.textContent == "") {
+  for (const p of pArr) {
+    if (p.textContent == "undefined" || p.textContent == "") {
       p.textContent = "None."
     }
   }

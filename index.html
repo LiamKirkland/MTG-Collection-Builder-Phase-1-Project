@@ -9,7 +9,7 @@
 <body>
   <h1>Collection Builder</h1>
   <form id="searchForm">
-    <input type="text" name="query" minlength="3" placeholder="Search for a card..." required />
+    <input type="text" name="query" minlength="3" placeholder="Search for a card..." autocomplete="off" required/>
     <input type="submit" name="submit" />
     <input type="button" name="randSearch" value="Random" />
   </form>
@@ -41,6 +41,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <div id="collection-container">
+
   </div>
   <script src="./src/script.js"></script>
 </body>
