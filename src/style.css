@@ -1,10 +1,7 @@
 /* --- Page layout --- */
 body {
-  margin: 0;
-  padding: 1.5rem 2rem;
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem;
 }
 
 h1 {
@@ -36,7 +33,7 @@ h1 {
 /* --- Two-column layout: results list + card info --- */
 #search-container {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 2fr;
+  grid-template-columns: minmax(220px, 320px) 1fr;
   gap: 1.5rem;
   align-items: start;
 }
@@ -63,41 +60,69 @@ h1 {
 
 /* --- Card info panel --- */
 .card-info-container {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-column-gap: 1.25rem;
-  grid-row-gap: 0.35rem;
-  align-items: start;
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 6px;
 }
 
 .card-img {
-  grid-column: 1;
-  grid-row: 1 / span 11;
   width: 240px;
   max-width: 100%;
   height: auto;
   border-radius: 8px;
   display: block;
+  flex-shrink: 0;
+}
+
+.card-text-container {
+  flex: 1;
+  min-width: 0;
 }
 
 .card-name {
-  grid-column: 2;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.75rem 0;
+}
+
+/* Each h4/p pair sits on a single line */
+.card-text-container > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.35rem 0;
 }
 
 .card-info-container h4 {
-  grid-column: 2;
-  margin: 0.4rem 0 0 0;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .card-info-container p {
-  grid-column: 2;
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+/* --- Responsive: stack on narrow screens --- */
+@media (max-width: 875px) {
+  #search-container {
+    grid-template-columns: 1fr;
+  }
+
+  .card-info-container {
+    flex-direction: column;
+  }
+
+  .card-img {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
 }

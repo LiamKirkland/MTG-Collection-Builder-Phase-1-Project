@@ -83,14 +83,10 @@ function displayCardInfo(resultLi) {
   pArr[2].textContent = card.set
   pArr[3].textContent = card.oracleText
   pArr[4].textContent = card.flavorText
-}
 
-// {
-//   "flavorName": "Miku, Lost but Singing",
-//   "name": "Azusa, Lost but Seeking",
-//   "imgurl": "https://cards.scryfall.io/normal/front/4/8/48b25568-46e9-4f4e-a4b5-7f371314e49e.jpg?1714611554",
-//   "set": "Secret Lair Drop",
-//   "artist": "Jehan Choo",
-//   "flavorText": "\"With every step, I discover a new stage. With every breath, a new song.\"",
-//   "oracleText": "You may play two additional lands on each of your turns."
-// }
+  for(const p of pArr) {
+    if(p.textContent == "undefined" || p.textContent == "") {
+      p.textContent = "None."
+    }
+  }
+}
