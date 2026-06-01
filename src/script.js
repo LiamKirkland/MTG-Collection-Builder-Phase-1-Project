@@ -20,7 +20,7 @@ function getCards(query) {
       const cards = queryRes.data
       resultsUL.replaceChildren()
 
-      cards.slice(0, 10).forEach((card) => {
+      cards.slice(0, 10).forEach((card, i) => {
         console.log(card)
         const cardLi = createEle("li")
 
@@ -34,6 +34,7 @@ function getCards(query) {
             "data-artist": card.artist,
             "data-flavor-text": card.flavor_text,
             "data-oracle-text": card.oracle_text,
+            "data-type-line": card.type_line,
           }
 
           Object.entries(attributes).forEach(([tag, value]) => {
@@ -48,6 +49,7 @@ function getCards(query) {
             "data-artist": card.artist,
             "data-flavor-text": card.flavor_text,
             "data-oracle-text": card.oracle_text,
+            "data-type-line": card.type_line,
           }
 
           Object.entries(attributes).forEach(([tag, value]) => {
@@ -55,7 +57,40 @@ function getCards(query) {
           })
         }
 
+        cardLi.id = "result" + i
+        cardLi.addEventListener("click", (e) => {
+          displayCardInfo(e.target)
+        })
         resultsUL.appendChild(cardLi)
       })
     })
 }
+
+function displayCardInfo(resultLi) {
+  const card = { ...resultLi.dataset }
+  const pArr = getByID("search-info-container").querySelectorAll("p")
+
+  getByID("search-card-img").src = card.imgurl
+  if (card.flavorName) {
+    getByID("search-card-name").textContent =
+      `${card.flavorName} (${card.name})`
+  } else {
+    getByID("search-card-name").textContent = card.name
+  }
+
+  pArr[0].textContent = card.typeLine
+  pArr[1].textContent = card.artist
+  pArr[2].textContent = card.set
+  pArr[3].textContent = card.oracleText
+  pArr[4].textContent = card.flavorText
+}
+
+// {
+//   "flavorName": "Miku, Lost but Singing",
+//   "name": "Azusa, Lost but Seeking",
+//   "imgurl": "https://cards.scryfall.io/normal/front/4/8/48b25568-46e9-4f4e-a4b5-7f371314e49e.jpg?1714611554",
+//   "set": "Secret Lair Drop",
+//   "artist": "Jehan Choo",
+//   "flavorText": "\"With every step, I discover a new stage. With every breath, a new song.\"",
+//   "oracleText": "You may play two additional lands on each of your turns."
+// }
