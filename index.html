@@ -1,20 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>MTG Collection Builder</title>
-    <link rel="stylesheet" href="./src/style.css">
-  </head>
-  <body>
-    <h1>Collection Builder</h1>
-    <form id="searchForm">
-      <input type="text" name="query" minlength="3" placeholder="Search for a card..." required />
-      <input type="submit" name="submit" />
-      <input type="button" name="randSearch" value="Random" />
-    </form>
-    <div id="search-container">
-      <ul id="search-results"></ul>
-      <div class="card-info-container" id="search-info-container"></div>
+
+<head>
+  <title>MTG Collection Builder</title>
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+
+<body>
+  <h1>Collection Builder</h1>
+  <form id="searchForm">
+    <input type="text" name="query" minlength="3" placeholder="Search for a card..." required />
+    <input type="submit" name="submit" />
+    <input type="button" name="randSearch" value="Random" />
+  </form>
+  <div id="search-container">
+    <ul id="search-results"></ul>
+    <div class="card-info-container" id="search-info-container">
+      <img class="card-img" id="search-card-img" src="./assets/placeholder.jpg" />
+      <div class="card-text-container">
+        <h2 class="card-name" id="search-card-name">Search for a card!</h2>
+        <div>
+          <h4 class="card-type-label">Type: </h4>
+          <p class="card-type-p" id="search-card-type">Card — Placeholder</p>
+        </div>
+        <div>
+          <h4 class="card-artist-label">Artist: </h4>
+          <p class="card-artist-p" id="search-card-artist">Xiaojie Cat</p>
+        </div>
+        <div>
+          <h4 class="card-set-label">Set: </h4>
+          <p class="card-set-p" id="search-card-set">None.</p>
+        </div>
+        <div>
+          <h4 class="card-desc-label">Description: </h4>
+          <p class="card-desc-p" id="search-card-desc">None.</p>
+        </div>
+        <div>
+          <h4 class="card-flavor-label">Flavor Text: </h4>
+          <p class="card-flavor-p" id="search-card-flavor">This card is very pwerful, as you can tell from the image...</p>
+        </div>
+      </div>
     </div>
-    <script src="./src/script.js"></script>
-  </body>
+  </div>
+  <script src="./src/script.js"></script>
+</body>
+
 </html>

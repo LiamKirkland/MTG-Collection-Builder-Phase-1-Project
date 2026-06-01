@@ -1,0 +1,128 @@
+/* --- Page layout --- */
+body {
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem;
+}
+
+h1 {
+  margin: 0 0 1rem 0;
+}
+
+/* --- Search form --- */
+#searchForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+#searchForm input[type="text"] {
+  flex: 1 1 280px;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+}
+
+#searchForm input[type="submit"],
+#searchForm input[type="button"] {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* --- Two-column layout: results list + card info --- */
+#search-container {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+#search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#search-results li {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+#search-results li:last-child {
+  border-bottom: none;
+}
+
+/* --- Card info panel --- */
+.card-info-container {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.card-img {
+  width: 240px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.card-text-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-name {
+  margin: 0 0 0.75rem 0;
+}
+
+/* Each h4/p pair sits on a single line */
+.card-text-container > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.35rem 0;
+}
+
+.card-info-container h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.card-info-container p {
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+/* --- Responsive: stack on narrow screens --- */
+@media (max-width: 875px) {
+  #search-container {
+    grid-template-columns: 1fr;
+  }
+
+  .card-info-container {
+    flex-direction: column;
+  }
+
+  .card-img {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
