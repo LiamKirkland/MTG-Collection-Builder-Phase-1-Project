@@ -28,7 +28,6 @@ addForm.addEventListener("submit", (e) => {
   }
 
   const formData = Object.fromEntries(new FormData(addForm))
-
   const card = {
     comment: formData.comment || "",
     print: "foil" in formData,
