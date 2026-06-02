@@ -93,8 +93,7 @@ updateForm.addEventListener("submit", (e) => {
 
 deleteBtn.addEventListener("click", (e) => {
   if (deleteBtn.value == "Delete") {
-    if (confirm("Are you sure you want to delete this card from your collection? This action cannot be undone.")) 
-      {
+    if (confirm("Are you sure you want to delete this card from your collection? This action cannot be undone.")) {
       getByID(collImg.dataset.cardId).remove()
       for (const p of [...getByID("collection-text-info").querySelectorAll("p")]) {
         p.textContent = ""
