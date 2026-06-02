@@ -43,6 +43,7 @@ addForm.addEventListener("submit", (e) => {
   newCard.addEventListener("click", (e) => {
     displayCardInfo(e.target, "collection")
   })
+  
   collContainer.appendChild(newCard)
   addForm.reset()
 })
