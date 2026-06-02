@@ -5,12 +5,40 @@ const getByID = (id) => document.getElementById(id)
 const createEle = (tag) => document.createElement(tag)
 
 const searchForm = getByID("searchForm")
+const addBtn = getByID("addBtn")
 const resultsUL = getByID("search-results")
+const searchImg = getByID("search-card-img")
+const collContainer = getByID("card-list")
 
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault()
   const formData = Object.fromEntries(new FormData(searchForm))
   getCards(formData.query)
+})
+
+addBtn.addEventListener('click', e => {
+  const commentBox = getByID('commentBox').value
+  const foil = getByID('foil').checked
+  const art = getByID('art').checked
+  const condition = getByID('conSelector').value
+
+  const card = {
+    comment: commentBox,
+    print: foil,
+    artSize: art,
+    cardCondition: condition
+  }
+
+  for(const key in searchImg.dataset) {
+    card[key] = searchImg.dataset[key]
+  }
+  const newCard = createEle('img')
+  newCard.src = searchImg.src
+  for(const key in card) {
+    newCard.dataset[key] = card[key]
+  }
+
+  collContainer.appendChild(newCard)
 })
 
 function getCards(query) {
@@ -64,18 +92,21 @@ function getCards(query) {
 
         cardLi.id = "result" + i
         cardLi.addEventListener("click", (e) => {
-          displayCardInfo(e.target)
+          displaySearchResult(e.target)
         })
         resultsUL.appendChild(cardLi)
       })
     })
 }
 
-function displayCardInfo(resultLi) {
+function displaySearchResult(resultLi) {
   const card = { ...resultLi.dataset }
   const pArr = getByID("search-info-container").querySelectorAll("p")
+  searchImg.src = card.imgurl
+  for(const key in resultLi.dataset) {
+    searchImg.dataset[key] = resultLi.dataset[key]
+  }
 
-  getByID("search-card-img").src = card.imgurl
   if (card.flavorName) {
     getByID("search-card-name").textContent =
       `${card.flavorName} (${card.name})`

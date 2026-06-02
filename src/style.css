@@ -110,6 +110,20 @@ h1 {
   word-wrap: break-word;
 }
 
+#addForm {
+  display: flex;
+  gap: 20px;
+}
+
+#addForm textarea {
+  width: 35%;
+  height: 4rem;
+}
+
+.addFormOptions {
+  display: flex;
+}
+
 /* --- Responsive: stack on narrow screens --- */
 @media (max-width: 875px) {
   #search-container {

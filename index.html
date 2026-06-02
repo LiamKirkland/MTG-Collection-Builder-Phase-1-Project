@@ -9,8 +9,8 @@
 <body>
   <h1>Collection Builder</h1>
   <form id="searchForm">
-    <input type="text" name="query" minlength="3" placeholder="Search for a card..." autocomplete="off" required/>
-    <input type="submit" name="submit" />
+    <input type="text" name="query" minlength="3" placeholder="Search for a card..." autocomplete="off" required />
+    <input type="submit" name="submit" value="Search" />
     <input type="button" name="randSearch" value="Random" />
   </form>
   <div id="search-container">
@@ -37,15 +37,66 @@
         </div>
         <div>
           <h4 class="card-flavor-label">Flavor Text: </h4>
-          <p class="card-flavor-p" id="search-card-flavor">This card is very powerful, as you can tell from the image...</p>
+          <p class="card-flavor-p" id="search-card-flavor">This card is very powerful, as you can tell from the image...
+          </p>
         </div>
+        <div id="addForm">
+          <textarea placeholder="Add a comment..." id="commentBox"></textarea>
+          <div id="addFormOptions">
+            <div>
+              <label>Foil</label>
+              <input type="checkbox" id="foil">
+            </div>
+            <div>
+              <label>Full Art</label>
+              <input type="checkbox" id="art">
+            </div>
+            <div>
+              <label>Condition</label>
+              <select id="conSelector">
+                <option value="">Select a Condition</option>
+                <option value="nm">Near Mint</option>
+                <option value="lp">Lightly Played</option>
+                <option value="mp">Moderately Played</option>
+                <option value="hp">Heavily Played</option>
+                <option value="dmg">Damaged</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <button id="addBtn">Add Card</button>
       </div>
     </div>
   </div>
   <div id="collection-container">
-
-  </div>
+    <div id="card-list"></div>
+  <div class="card-info-container" id="collection-info-container">
+      <img class="card-img" id="collection-card-img" />
+      <div class="card-text-container">
+        <h2 class="card-name" id="collection-card-name"></h2>
+        <div>
+          <h4 class="card-type-label">Type: </h4>
+          <p class="card-type-p" id="collection-card-type"></p>
+        </div>
+        <div>
+          <h4 class="card-artist-label">Artist: </h4>
+          <p class="card-artist-p" id="collection-card-artist"></p>
+        </div>
+        <div>
+          <h4 class="card-set-label">Set: </h4>
+          <p class="card-set-p" id="collection-card-set"></p>
+        </div>
+        <div>
+          <h4 class="card-desc-label">Description: </h4>
+          <p class="card-desc-p" id="collection-card-desc">None.</p>
+        </div>
+        <div>
+          <h4 class="card-flavor-label">Flavor Text: </h4>
+          <p class="card-flavor-p" id="collection-card-flavor">
+          </p>
+        </div>
+      </div>
+    </div>
   <script src="./src/script.js"></script>
 </body>
-
 </html>
