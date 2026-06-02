@@ -110,8 +110,51 @@ h1 {
   word-wrap: break-word;
 }
 
+#addForm {
+  display: flex;
+  gap: 20px;
+}
+
+#addForm textarea {
+  width: 35%;
+  height: 4rem;
+}
+
+.addFormOptions {
+  display: flex;
+}
+
+#collection-container {
+  display: grid;
+  grid-template-columns: 1fr 1.75fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+#card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  padding: 0.5rem;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+}
+
+#card-list img {
+  width: 110px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+#card-list img:hover {
+  outline: 2px solid #888;
+}
+
 /* --- Responsive: stack on narrow screens --- */
-@media (max-width: 875px) {
+@media (max-width: 1050px) {
   #search-container {
     grid-template-columns: 1fr;
   }
@@ -124,5 +167,9 @@ h1 {
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
+  }
+
+  #collection-container {
+    grid-template-columns: 1fr;
   }
 }
