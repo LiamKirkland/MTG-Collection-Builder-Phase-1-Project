@@ -86,7 +86,6 @@ h1 {
   margin: 0 0 0.75rem 0;
 }
 
-/* Each h4/p pair sits on a single line */
 .card-text-container > div {
   display: flex;
   flex-wrap: wrap;
@@ -151,6 +150,14 @@ h1 {
 
 #card-list img:hover {
   outline: 2px solid #888;
+}
+
+#updateForm > div{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.35rem 0;
 }
 
 /* --- Responsive: stack on narrow screens --- */
