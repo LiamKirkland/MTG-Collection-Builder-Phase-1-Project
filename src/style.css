@@ -124,6 +124,34 @@ h1 {
   display: flex;
 }
 
+#collection-container {
+  display: grid;
+  grid-template-columns: 1fr 1.75fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+
+#card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border: 1px dashed #ccc;
+  border-radius: 6px;
+}
+
+#card-list img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#card-list img:hover {
+  outline: 2px solid #888;
+}
+
 /* --- Responsive: stack on narrow screens --- */
 @media (max-width: 875px) {
   #search-container {
@@ -138,5 +166,9 @@ h1 {
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
+  }
+
+  #collection-container {
+    grid-template-columns: 1fr;
   }
 }

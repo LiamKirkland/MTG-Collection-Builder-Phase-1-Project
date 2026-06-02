@@ -5,10 +5,10 @@ const getByID = (id) => document.getElementById(id)
 const createEle = (tag) => document.createElement(tag)
 
 const searchForm = getByID("searchForm")
-const addBtn = getByID("addBtn")
 const resultsUL = getByID("search-results")
 const searchImg = getByID("search-card-img")
 const collContainer = getByID("card-list")
+const addForm = getByID("addForm")
 
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault()
@@ -16,29 +16,34 @@ searchForm.addEventListener("submit", (e) => {
   getCards(formData.query)
 })
 
-addBtn.addEventListener('click', e => {
-  const commentBox = getByID('commentBox').value
-  const foil = getByID('foil').checked
-  const art = getByID('art').checked
-  const condition = getByID('conSelector').value
+addForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+  const newCard = createEle("img")
+  newCard.src = searchImg.src
+
+  if (!searchImg.dataset.name) {
+    alert("Use the search to find a card to add!")
+    return
+  }
+
+  const formData = Object.fromEntries(new FormData(addForm))
 
   const card = {
-    comment: commentBox,
-    print: foil,
-    artSize: art,
-    cardCondition: condition
+    comment: formData.comment || "",
+    print: 'foil' in formData,
+    artSize: 'art' in formData,
+    cardCondition: formData.condition,
+    ...searchImg.dataset,
   }
-
-  for(const key in searchImg.dataset) {
-    card[key] = searchImg.dataset[key]
-  }
-  const newCard = createEle('img')
-  newCard.src = searchImg.src
-  for(const key in card) {
+  for (const key in card) {
     newCard.dataset[key] = card[key]
   }
 
+  newCard.addEventListener("click", (e) => {
+    displayCardInfo(e.target, "collection")
+  })
   collContainer.appendChild(newCard)
+  addForm.reset()
 })
 
 function getCards(query) {
@@ -92,26 +97,45 @@ function getCards(query) {
 
         cardLi.id = "result" + i
         cardLi.addEventListener("click", (e) => {
-          displaySearchResult(e.target)
+          displayCardInfo(e.target, "search")
         })
         resultsUL.appendChild(cardLi)
       })
     })
 }
 
-function displaySearchResult(resultLi) {
-  const card = { ...resultLi.dataset }
-  const pArr = getByID("search-info-container").querySelectorAll("p")
-  searchImg.src = card.imgurl
-  for(const key in resultLi.dataset) {
-    searchImg.dataset[key] = resultLi.dataset[key]
-  }
+function displayCardInfo(cardLi, mode) {
+  const card = { ...cardLi.dataset }
+  const pArr = []
+  if (mode == "search") {
+    pArr.push(...getByID("search-info-container").querySelectorAll("p"))
+    searchImg.src = card.imgurl
 
-  if (card.flavorName) {
-    getByID("search-card-name").textContent =
-      `${card.flavorName} (${card.name})`
-  } else {
-    getByID("search-card-name").textContent = card.name
+    if (card.flavorName) {
+      getByID("search-card-name").textContent =
+        `${card.flavorName} (${card.name})`
+    } else {
+      getByID("search-card-name").textContent = card.name
+    }
+
+    for (const key in cardLi.dataset) {
+      searchImg.dataset[key] = cardLi.dataset[key]
+    }
+  }
+  if (mode == "collection") {
+    pArr.push(...getByID("collection-info-container").querySelectorAll("p"))
+    getByID("collection-card-img").src = card.imgurl
+
+    if (card.flavorName) {
+      getByID("collection-card-name").textContent =
+        `${card.flavorName} (${card.name})`
+    } else {
+      getByID("collection-card-name").textContent = card.name
+    }
+    console.log(card)
+    pArr[5].textContent = card.print
+    pArr[6].textContent = card.artSize
+    pArr[7].textContent = card.comment
   }
 
   pArr[0].textContent = card.typeLine
