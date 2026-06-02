@@ -55,11 +55,11 @@
               <label>Condition</label>
               <select name="condition" id="conSelector" required>
                 <option value="">Select a Condition</option>
-                <option value="nm">Near Mint</option>
-                <option value="lp">Lightly Played</option>
-                <option value="mp">Moderately Played</option>
-                <option value="hp">Heavily Played</option>
-                <option value="dmg">Damaged</option>
+                <option value="Near Mint">Near Mint</option>
+                <option value="Lightly Played">Lightly Played</option>
+                <option value="Moderately Played">Moderately Played</option>
+                <option value="Heavily Played">Heavily Played</option>
+                <option value="Damaged">Damaged</option>
               </select>
             </div>
           </div>
@@ -95,18 +95,36 @@
           <p class="card-flavor-p" id="collection-card-flavor">
           </p>
         </div>
-        <div>
-          <h4>Foil: </h4>
-          <p></p>
-        </div>
-        <div>
-          <h4>Full Art: </h4>
-          <p></p>
-        </div>
-        <div>
-          <h4>Comment: </h4>
-          <p></p>
-        </div>
+        <form id="updateForm">
+          <div>
+            <h4>Condition: </h4>
+            <p id="collection-condition"></p>
+            <select name="condition" id="updateCond" hidden>
+              <option value="Near Mint">Near Mint</option>
+              <option value="Lightly Played">Lightly Played</option>
+              <option value="Moderately Played">Moderately Played</option>
+              <option value="Heavily Played">Heavily Played</option>
+              <option value="Damaged">Damaged</option>
+            </select>
+          </div>
+          <div>
+            <h4>Foil: </h4>
+            <p id="collection-foil"></p>
+            <input type="checkbox" name="foil" id="updateFoil" hidden>
+          </div>
+          <div>
+            <h4>Full Art: </h4>
+            <p id="collection-art"></p>
+            <input type="checkbox" name="art" id="updateArt" hidden>
+          </div>
+          <div>
+            <h4>Comment: </h4>
+            <p id="collection-comment"></p>
+            <textarea placeholder="Add a comment..." name="comment" autocomplete="off" hidden></textarea>
+          </div>
+          <input type="submit" value="Update" id="updateBtn">
+          <input type="button" name="delete" value="Delete" id="deleteBtn">
+        </form>
       </div>
     </div>
     <script src="./src/script.js"></script>

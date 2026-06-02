@@ -9,6 +9,9 @@ const resultsUL = getByID("search-results")
 const searchImg = getByID("search-card-img")
 const collContainer = getByID("card-list")
 const addForm = getByID("addForm")
+const updateForm = getByID("updateForm")
+const updateBtn = getByID("updateBtn")
+const deleteBtn = getByID("deleteBtn")
 
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault()
@@ -35,7 +38,7 @@ addForm.addEventListener("submit", (e) => {
     cardCondition: formData.condition,
     ...searchImg.dataset,
   }
-  
+
   for (const key in card) {
     newCard.dataset[key] = card[key]
   }
@@ -43,9 +46,39 @@ addForm.addEventListener("submit", (e) => {
   newCard.addEventListener("click", (e) => {
     displayCardInfo(e.target, "collection")
   })
-  
+
   collContainer.appendChild(newCard)
   addForm.reset()
+})
+
+updateForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+  const pArr = [...updateForm.querySelectorAll("p")]
+  const formData = Object.fromEntries(new FormData(updateForm))
+
+  if (updateBtn.value == "Update") {
+    updateBtn.value = "Save"
+    deleteBtn.value = "Cancel"
+
+    for (const p of pArr) {
+      p.hidden = true
+    }
+    updateForm.querySelector("select").hidden = false
+    updateForm.querySelector("select").value = getByID(
+      "collection-condition",
+    ).textContent
+    updateForm.querySelector("textarea").hidden = false
+    updateForm.querySelector("textarea").value =
+      getByID("collection-comment").textContent == "None."
+        ? ""
+        : getByID("collection-comment").textContent
+    updateForm.querySelector("#updateFoil").hidden = false
+    updateForm.querySelector("#updateFoil").checked =
+      getByID("collection-foil").textContent == "Yes" ? true : false
+    updateForm.querySelector("#updateArt").hidden = false
+    updateForm.querySelector("#updateArt").checked =
+      getByID("collection-art").textContent == "Yes" ? true : false
+  }
 })
 
 function getCards(query) {
@@ -110,7 +143,7 @@ function getCards(query) {
 function displayCardInfo(cardLi, mode) {
   const card = { ...cardLi.dataset }
   const pArr = []
-  
+
   if (mode == "search") {
     pArr.push(...getByID("search-info-container").querySelectorAll("p"))
     searchImg.src = card.imgurl
@@ -126,7 +159,7 @@ function displayCardInfo(cardLi, mode) {
       searchImg.dataset[key] = cardLi.dataset[key]
     }
   }
-  
+
   if (mode == "collection") {
     pArr.push(...getByID("collection-info-container").querySelectorAll("p"))
     getByID("collection-card-img").src = card.imgurl
@@ -138,9 +171,10 @@ function displayCardInfo(cardLi, mode) {
       getByID("collection-card-name").textContent = card.name
     }
     console.log(card)
-    pArr[5].textContent = card.print == "true" ? "Yes" : "No"
-    pArr[6].textContent = card.artSize == "true" ? "Yes" : "No"
-    pArr[7].textContent = card.comment
+    pArr[5].textContent = card.cardCondition
+    pArr[6].textContent = card.print == "true" ? "Yes" : "No"
+    pArr[7].textContent = card.artSize == "true" ? "Yes" : "No"
+    pArr[8].textContent = card.comment
   }
 
   pArr[0].textContent = card.typeLine
