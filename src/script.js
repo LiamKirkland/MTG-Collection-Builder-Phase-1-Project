@@ -64,7 +64,7 @@ updateForm.addEventListener("submit", (e) => {
   const pArr = [...updateForm.querySelectorAll("p")]
   const formData = Object.fromEntries(new FormData(updateForm))
 
-  if (updateBtn.value == "Update" && collImg.dataset.cardId != "" && collImg.dataset.cardId != undefined) {
+  if (updateBtn.value == "Update" && collImg.dataset.cardId) {
     updateBtn.value = "Save"
     deleteBtn.value = "Cancel"
 
@@ -107,6 +107,47 @@ deleteBtn.addEventListener("click", (e) => {
     exitEditMode()
   }
 })
+
+document.body.addEventListener('keydown', e => {
+  switch(e.key) {
+    case "ArrowUp":
+      cycleResults(-1)
+      break;
+    case "ArrowDown":
+      cycleResults(1)
+      break;
+    case "ArrowLeft":
+      cycleCollection(-1)
+      break;
+    case "ArrowRight":
+      cycleCollection(1)
+      break;
+  }
+})
+
+function cycleResults(direction) {
+  if (resultsUL.childElementCount > 0 && searchImg.dataset.cardId) {
+    let id = +searchImg.dataset.cardId.slice(6) + direction
+    if (id >= 0 && id < resultsUL.childElementCount) {
+      id = "result" + id
+      displayCardInfo(getByID(id), "search")
+    }
+  } else if (resultsUL.childElementCount > 0 && !searchImg.dataset.cardId) {
+    displayCardInfo(getByID("result0"), "search")
+  }
+}
+
+function cycleCollection(direction) {
+  if (collContainer.childElementCount > 0 && collImg.dataset.cardId) {
+    let id = +collImg.dataset.cardId.slice(10) + direction
+    if (id >= 0 && id < collContainer.childElementCount) {
+      id = "collection" + id
+      displayCardInfo(getByID(id), "collection")
+    }
+  } else if (collContainer.childElementCount > 0 && !collImg.dataset.cardId) {
+    displayCardInfo(getByID("collection0"), "collection")
+  }
+}
 
 function exitEditMode() {
   updateBtn.value = "Update"
@@ -174,6 +215,7 @@ function displayCardInfo(cardLi, mode) {
   if (mode == "search") {
     pArr.push(...getByID("search-info-container").querySelectorAll("p"))
     searchImg.src = card.imgurl
+    searchImg.setAttribute("data-card-id", cardLi.id)
 
     if (card.flavorName) {
       getByID("search-card-name").textContent =
