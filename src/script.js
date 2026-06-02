@@ -110,6 +110,7 @@ function getCards(query) {
 function displayCardInfo(cardLi, mode) {
   const card = { ...cardLi.dataset }
   const pArr = []
+  
   if (mode == "search") {
     pArr.push(...getByID("search-info-container").querySelectorAll("p"))
     searchImg.src = card.imgurl
