@@ -14,6 +14,7 @@ searchForm.addEventListener("submit", (e) => {
   e.preventDefault()
   const formData = Object.fromEntries(new FormData(searchForm))
   getCards(formData.query)
+  addForm.reset()
 })
 
 addForm.addEventListener("submit", (e) => {
@@ -30,8 +31,8 @@ addForm.addEventListener("submit", (e) => {
 
   const card = {
     comment: formData.comment || "",
-    print: 'foil' in formData,
-    artSize: 'art' in formData,
+    print: "foil" in formData,
+    artSize: "art" in formData,
     cardCondition: formData.condition,
     ...searchImg.dataset,
   }
@@ -98,6 +99,7 @@ function getCards(query) {
         cardLi.id = "result" + i
         cardLi.addEventListener("click", (e) => {
           displayCardInfo(e.target, "search")
+          addForm.reset()
         })
         resultsUL.appendChild(cardLi)
       })
@@ -133,8 +135,8 @@ function displayCardInfo(cardLi, mode) {
       getByID("collection-card-name").textContent = card.name
     }
     console.log(card)
-    pArr[5].textContent = card.print
-    pArr[6].textContent = card.artSize
+    pArr[5].textContent = card.print == "true" ? "Yes" : "No"
+    pArr[6].textContent = card.artSize == "true" ? "Yes" : "No"
     pArr[7].textContent = card.comment
   }
 
