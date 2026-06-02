@@ -35,6 +35,7 @@ addForm.addEventListener("submit", (e) => {
     cardCondition: formData.condition,
     ...searchImg.dataset,
   }
+  
   for (const key in card) {
     newCard.dataset[key] = card[key]
   }
