@@ -7,6 +7,7 @@ const createEle = (tag) => document.createElement(tag)
 const searchForm = getByID("searchForm")
 const resultsUL = getByID("search-results")
 const searchImg = getByID("search-card-img")
+const collImg = getByID("collection-card-img")
 const collContainer = getByID("card-list")
 const addForm = getByID("addForm")
 const updateForm = getByID("updateForm")
@@ -47,6 +48,7 @@ addForm.addEventListener("submit", (e) => {
     displayCardInfo(e.target, "collection")
   })
 
+  newCard.id = "collection" + collContainer.childElementCount
   collContainer.appendChild(newCard)
   addForm.reset()
 })
@@ -78,6 +80,52 @@ updateForm.addEventListener("submit", (e) => {
     updateForm.querySelector("#updateArt").hidden = false
     updateForm.querySelector("#updateArt").checked =
       getByID("collection-art").textContent == "Yes" ? true : false
+  } else if (updateBtn.value == "Save") {
+    updateBtn.value = "Update"
+    deleteBtn.value = "Delete"
+
+    for (const p of pArr) {
+      p.hidden = false
+    }
+    updateForm.querySelector("select").hidden = true
+    updateForm.querySelector("textarea").hidden = true
+    updateForm.querySelector("#updateFoil").hidden = true
+    updateForm.querySelector("#updateArt").hidden = true
+
+    const collectionCard = getByID(collImg.getAttribute("data-card-id"))
+
+    collectionCard.dataset["comment"] = formData.comment
+    collectionCard.dataset["cardCondition"] = formData.condition
+    collectionCard.dataset["print"] = "foil" in formData
+    collectionCard.dataset["artSize"] = "art" in formData
+
+    displayCardInfo(collectionCard, "collection")
+  }
+})
+
+deleteBtn.addEventListener("click", (e) => {
+  if (deleteBtn.value == "Delete") {
+    if (confirm("Are you sure you want to delete this card from your collection? This action cannot be undone.")) 
+      {
+      getByID(collImg.getAttribute("data-card-id")).remove()
+      for (const p of [...getByID("collection-text-info").querySelectorAll("p")]) {
+        p.textContent = ""
+      }
+      getByID("collection-card-name").textContent = ""
+      collImg.src = ""
+    }
+  }
+  if (deleteBtn.value == "Cancel") {
+    for (const p of [...updateForm.querySelectorAll("p")]) {
+      p.hidden = false
+    }
+    updateForm.querySelector("select").hidden = true
+    updateForm.querySelector("textarea").hidden = true
+    updateForm.querySelector("#updateFoil").hidden = true
+    updateForm.querySelector("#updateArt").hidden = true
+
+    updateBtn.value = "Update"
+    deleteBtn.value = "Delete"
   }
 })
 
@@ -162,7 +210,8 @@ function displayCardInfo(cardLi, mode) {
 
   if (mode == "collection") {
     pArr.push(...getByID("collection-info-container").querySelectorAll("p"))
-    getByID("collection-card-img").src = card.imgurl
+    collImg.src = card.imgurl
+    collImg.setAttribute("data-card-id", cardLi.id)
 
     if (card.flavorName) {
       getByID("collection-card-name").textContent =
