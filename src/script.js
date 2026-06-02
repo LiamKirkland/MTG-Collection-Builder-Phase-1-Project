@@ -126,6 +126,7 @@ function displayCardInfo(cardLi, mode) {
       searchImg.dataset[key] = cardLi.dataset[key]
     }
   }
+  
   if (mode == "collection") {
     pArr.push(...getByID("collection-info-container").querySelectorAll("p"))
     getByID("collection-card-img").src = card.imgurl
