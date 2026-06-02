@@ -13,6 +13,12 @@ const addForm = getByID("addForm")
 const updateForm = getByID("updateForm")
 const updateBtn = getByID("updateBtn")
 const deleteBtn = getByID("deleteBtn")
+const conditionSelect = updateForm.querySelector("select")
+const commentTextarea = updateForm.querySelector("textarea")
+const updateFoil = updateForm.querySelector("#updateFoil")
+const updateArt = updateForm.querySelector("#updateArt")
+const updateInputs = [conditionSelect, commentTextarea, updateFoil, updateArt]
+const updatePs = () => [...updateForm.querySelectorAll("p")]
 
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault()
@@ -58,41 +64,23 @@ updateForm.addEventListener("submit", (e) => {
   const pArr = [...updateForm.querySelectorAll("p")]
   const formData = Object.fromEntries(new FormData(updateForm))
 
-  if (updateBtn.value == "Update") {
+  if (updateBtn.value == "Update" && collImg.dataset.cardId != "" && collImg.dataset.cardId != undefined) {
     updateBtn.value = "Save"
     deleteBtn.value = "Cancel"
 
-    for (const p of pArr) {
-      p.hidden = true
-    }
-    updateForm.querySelector("select").hidden = false
-    updateForm.querySelector("select").value = getByID(
-      "collection-condition",
-    ).textContent
-    updateForm.querySelector("textarea").hidden = false
+    updatePs().forEach((p) => (p.hidden = true))
+    updateInputs.forEach((el) => (el.hidden = false))
+    conditionSelect.value = getByID("collection-condition").textContent
     updateForm.querySelector("textarea").value =
       getByID("collection-comment").textContent == "None."
         ? ""
         : getByID("collection-comment").textContent
-    updateForm.querySelector("#updateFoil").hidden = false
-    updateForm.querySelector("#updateFoil").checked =
-      getByID("collection-foil").textContent == "Yes" ? true : false
-    updateForm.querySelector("#updateArt").hidden = false
-    updateForm.querySelector("#updateArt").checked =
-      getByID("collection-art").textContent == "Yes" ? true : false
+    updateFoil.checked = getByID("collection-foil").textContent === "Yes"
+    updateArt.checked = getByID("collection-art").textContent === "Yes"
   } else if (updateBtn.value == "Save") {
-    updateBtn.value = "Update"
-    deleteBtn.value = "Delete"
+    exitEditMode()
 
-    for (const p of pArr) {
-      p.hidden = false
-    }
-    updateForm.querySelector("select").hidden = true
-    updateForm.querySelector("textarea").hidden = true
-    updateForm.querySelector("#updateFoil").hidden = true
-    updateForm.querySelector("#updateArt").hidden = true
-
-    const collectionCard = getByID(collImg.getAttribute("data-card-id"))
+    const collectionCard = getByID(collImg.dataset.cardId)
 
     collectionCard.dataset["comment"] = formData.comment
     collectionCard.dataset["cardCondition"] = formData.condition
@@ -107,27 +95,27 @@ deleteBtn.addEventListener("click", (e) => {
   if (deleteBtn.value == "Delete") {
     if (confirm("Are you sure you want to delete this card from your collection? This action cannot be undone.")) 
       {
-      getByID(collImg.getAttribute("data-card-id")).remove()
+      getByID(collImg.dataset.cardId).remove()
       for (const p of [...getByID("collection-text-info").querySelectorAll("p")]) {
         p.textContent = ""
       }
       getByID("collection-card-name").textContent = ""
       collImg.src = ""
+      collImg.dataset.cardId = ""
     }
   }
   if (deleteBtn.value == "Cancel") {
-    for (const p of [...updateForm.querySelectorAll("p")]) {
-      p.hidden = false
-    }
-    updateForm.querySelector("select").hidden = true
-    updateForm.querySelector("textarea").hidden = true
-    updateForm.querySelector("#updateFoil").hidden = true
-    updateForm.querySelector("#updateArt").hidden = true
-
-    updateBtn.value = "Update"
-    deleteBtn.value = "Delete"
+    exitEditMode()
   }
 })
+
+function exitEditMode() {
+  updateBtn.value = "Update"
+  deleteBtn.value = "Delete"
+
+  updatePs().forEach((p) => (p.hidden = false))
+  updateInputs.forEach((el) => (el.hidden = true))
+}
 
 function getCards(query) {
   fetch(`${scryURL}search?q=${query.replace(/ /g, "+")}`)
@@ -144,34 +132,26 @@ function getCards(query) {
           .replace(/\n/g, ", ")
           .replace(/\.,/g, ".")
 
+        let attributes = {
+          "data-name": card.name,
+          "data-imgurl": card.image_uris.normal,
+          "data-set": card.set_name,
+          "data-artist": card.artist,
+          "data-flavor-text": card.flavor_text,
+          "data-oracle-text": oracleText,
+          "data-type-line": card.type_line,
+        }
+
         if (card.flavor_name && card.flavor_name !== card.name) {
           cardLi.textContent = card.flavor_name
           oracleText = oracleText.replaceAll(card.name, card.flavor_name)
-          const attributes = {
-            "data-flavor-name": card.flavor_name,
-            "data-name": card.name,
-            "data-imgurl": card.image_uris.normal,
-            "data-set": card.set_name,
-            "data-artist": card.artist,
-            "data-flavor-text": card.flavor_text,
-            "data-oracle-text": oracleText,
-            "data-type-line": card.type_line,
-          }
+          attributes["data-flavor-name"] = card.flavor_name
 
           Object.entries(attributes).forEach(([tag, value]) => {
             cardLi.setAttribute(tag, value)
           })
         } else {
           cardLi.textContent = card.name
-          const attributes = {
-            "data-name": card.name,
-            "data-imgurl": card.image_uris.normal,
-            "data-set": card.set_name,
-            "data-artist": card.artist,
-            "data-flavor-text": card.flavor_text,
-            "data-oracle-text": oracleText,
-            "data-type-line": card.type_line,
-          }
 
           Object.entries(attributes).forEach(([tag, value]) => {
             cardLi.setAttribute(tag, value)
