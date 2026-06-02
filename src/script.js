@@ -152,7 +152,7 @@ function getCards(query) {
           })
         } else {
           cardLi.textContent = card.name
-
+          attributes["data-flavor-name"] = ""
           Object.entries(attributes).forEach(([tag, value]) => {
             cardLi.setAttribute(tag, value)
           })
