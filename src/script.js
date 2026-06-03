@@ -117,16 +117,17 @@ deleteBtn.addEventListener("click", (e) => {
   }
 })
 
-randBtn.addEventListener('click', e => {
+randBtn.addEventListener("click", (e) => {
   e.target.disabled = true
+  searchForm.reset()
   fetch(scryURL + "random")
-  .then(res => res.json())
-  .then(data => {
-    resultsUL.replaceChildren()
-    appendSearch(data, 0)
-    displayCardInfo(resultsUL.children[0], 'search')
-    e.target.disabled = false
-  })
+    .then((res) => res.json())
+    .then((data) => {
+      resultsUL.replaceChildren()
+      appendSearch(data, 0)
+      displayCardInfo(resultsUL.children[0], "search")
+      e.target.disabled = false
+    })
 })
 
 document.body.addEventListener("keydown", (e) => {
@@ -183,54 +184,67 @@ function getCards(query) {
   fetch(`${scryURL}search?q=${query.replace(/ /g, "+")}`)
     .then((res) => res.json())
     .then((queryRes) => {
-      const cards = queryRes.data
-      resultsUL.replaceChildren()
-
-      cards.slice(0, 10).forEach((card, i) => {
-        appendSearch(card, i)
-      })
+      if ((queryRes.status = 404)) {
+        alert(queryRes.details)
+      } else {
+        const cards = queryRes.data
+        resultsUL.replaceChildren()
+        cards.slice(0, 10).forEach((card, i) => {
+          appendSearch(card, i)
+        })
+      }
     })
 }
 
 function appendSearch(card, id) {
+  const front = card.card_faces?.[0] ?? {}
+  const back  = card.card_faces?.[1] ?? {}
+
+  const pick = (key) => card[key] ?? front[key]
+  
+  const rawOracle =
+    card.oracle_text ??
+    [front.oracle_text, back.oracle_text].filter(Boolean).join("\n//\n")
+
   const cardLi = createEle("li")
-        let oracleText = card.oracle_text
-          .replace(/\n/g, ", ")
-          .replace(/\.,/g, ".")
+  let oracleText = (rawOracle ?? "")
+    .replace(/\n/g, ", ")
+    .replace(/\.,/g, ".")
 
-        let attributes = {
-          "data-name": card.name,
-          "data-imgurl": card.image_uris.normal,
-          "data-set": card.set_name,
-          "data-artist": card.artist,
-          "data-flavor-text": card.flavor_text,
-          "data-oracle-text": oracleText,
-          "data-type-line": card.type_line,
-        }
+  let attributes = {
+    "data-name": card.name,
+    "data-imgurl": (card.image_uris ?? front.image_uris).normal ?? "",
+    "data-set": card.set_name,
+    "data-artist": pick("artist"),
+    "data-flavor-text": pick("flavor_text") ?? "",
+    "data-oracle-text": oracleText,
+    "data-type-line": pick("type_line"),
+  }
 
-        if (card.flavor_name && card.flavor_name !== card.name) {
-          cardLi.textContent = card.flavor_name
-          oracleText = oracleText.replaceAll(card.name, card.flavor_name)
-          attributes["data-flavor-name"] = card.flavor_name
+  if (card.flavor_name && card.flavor_name !== card.name) {
+    cardLi.textContent = card.flavor_name
+    oracleText = oracleText.replaceAll(card.name, card.flavor_name)
+    attributes["data-flavor-name"] = card.flavor_name
 
-          Object.entries(attributes).forEach(([tag, value]) => {
-            cardLi.setAttribute(tag, value)
-          })
-        } else {
-          cardLi.textContent = card.name
-          attributes["data-flavor-name"] = ""
-          Object.entries(attributes).forEach(([tag, value]) => {
-            cardLi.setAttribute(tag, value)
-          })
-        }
+    Object.entries(attributes).forEach(([tag, value]) => {
+      cardLi.setAttribute(tag, value)
+    })
+  } else {
+    cardLi.textContent = card.name
+    attributes["data-flavor-name"] = ""
+    Object.entries(attributes).forEach(([tag, value]) => {
+      cardLi.setAttribute(tag, value)
+    })
+  }
 
-        cardLi.id = "result" + id
-        cardLi.addEventListener("click", (e) => {
-          displayCardInfo(e.target, "search")
-          addForm.reset()
-        })
-        resultsUL.appendChild(cardLi)
+  cardLi.id = "result" + id
+  cardLi.addEventListener("click", (e) => {
+    displayCardInfo(e.target, "search")
+    addForm.reset()
+  })
+  resultsUL.appendChild(cardLi)
 }
+
 function displayCardInfo(cardLi, mode) {
   const card = { ...cardLi.dataset }
   const pArr = []
