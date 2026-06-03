@@ -215,7 +215,7 @@ function appendSearch(card, id) {
 
   const rawOracle =
     card.oracle_text ??
-    [front.oracle_text, back.oracle_text].filter(Boolean).join("\n//")
+    [front.oracle_text, back.oracle_text].filter(Boolean).join("\n// ")
 
   const cardLi = createEle("li")
   let oracleText = (rawOracle ?? "").replace(/\n/g, ", ").replace(/\.,/g, ".")

@@ -65,7 +65,8 @@ h1 {
 #searchForm input[type="button"],
 #addForm input[type="submit"],
 #updateForm input[type="submit"],
-#updateForm input[type="button"] {
+#updateForm input[type="button"],
+.flip-btn {
   padding: 0.45rem 1rem;
   font-size: 0.95rem;
   font-family: inherit;
@@ -83,13 +84,15 @@ h1 {
 #searchForm input[type="button"]:hover,
 #addForm input[type="submit"]:hover,
 #updateForm input[type="submit"]:hover,
-#updateForm input[type="button"]:hover {
+#updateForm input[type="button"]:hover,
+.flip-btn:hover {
   background: linear-gradient(180deg, var(--gold-bright), var(--gold));
   color: var(--frame-brown);
 }
 
 #searchForm input[type="submit"]:active,
-#searchForm input[type="button"]:active {
+#searchForm input[type="button"]:active,
+.flip-btn:active {
   transform: translateY(1px);
 }
 
@@ -155,6 +158,16 @@ h1 {
     var(--shadow);
 }
 
+.card-img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  width: 240px;
+  max-width: 100%;
+}
+
 .card-img {
   width: 240px;
   max-width: 100%;
@@ -163,6 +176,11 @@ h1 {
   display: block;
   flex-shrink: 0;
   box-shadow: var(--shadow);
+}
+
+.flip-btn {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card-text-container {
@@ -365,17 +383,15 @@ select {
     flex-direction: column;
   }
 
-  .card-img {
+  .card-img-container {
     width: 100%;
     max-width: 320px;
     margin: 0 auto;
   }
 
-  #collection-container {
-    grid-template-columns: 1fr;
-  }
-
-  #addForm {
-    grid-template-columns: 1fr;
+  .card-img {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
   }
 }
