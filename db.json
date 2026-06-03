@@ -1,0 +1,36 @@
+{
+  "cardCollection": [
+    {
+      "comment": "",
+      "print": "false",
+      "artSize": "false",
+      "cardCondition": "Lightly Played",
+      "src": "https://cards.scryfall.io/normal/front/f/2/f2a6556b-a4f1-4ff5-8e6e-a47618c8c66e.jpg?1593095634",
+      "name": "Bloodcrazed Hoplite",
+      "imgurl": "https://cards.scryfall.io/normal/front/f/2/f2a6556b-a4f1-4ff5-8e6e-a47618c8c66e.jpg?1593095634",
+      "set": "Journey into Nyx",
+      "artist": "Jeff Simpson",
+      "flavorText": "undefined",
+      "oracleText": "Heroic — Whenever you cast a spell that targets this creature, put a +1/+1 counter on it. Whenever a +1/+1 counter is put on this creature, remove a +1/+1 counter from target creature an opponent controls.",
+      "typeLine": "Creature — Human Soldier",
+      "flavorName": "",
+      "id": 1
+    },
+    {
+      "comment": "",
+      "print": "false",
+      "artSize": "false",
+      "cardCondition": "Lightly Played",
+      "src": "https://cards.scryfall.io/normal/front/3/e/3e2160e9-14a0-4c75-b7b0-fb09051ddb32.jpg?1562553984",
+      "name": "Bloodcrazed Paladin",
+      "imgurl": "https://cards.scryfall.io/normal/front/3/e/3e2160e9-14a0-4c75-b7b0-fb09051ddb32.jpg?1562553984",
+      "set": "Ixalan",
+      "artist": "Daarken",
+      "flavorText": "When a paladin undertaking the Blood Fast finally gives in to hunger, the violence is sudden, explosive, and complete.",
+      "oracleText": "Flash, This creature enters with a +1/+1 counter on it for each creature that died this turn.",
+      "typeLine": "Creature — Vampire Knight",
+      "flavorName": "",
+      "id": 2
+    }
+  ]
+}
