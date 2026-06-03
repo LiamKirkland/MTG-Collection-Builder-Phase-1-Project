@@ -287,7 +287,9 @@ function displayCardInfo(cardLi, mode) {
   if (mode == "collection") {
     pArr.push(...getByID("collection-info-container").querySelectorAll("p"))
     collImg.src = card.imgurl
-    collImg.dataset.cardId = cardLi.dataset.id
+    collImg.dataset.cardId = card.id
+    collImg.dataset.imgurl = card.imgurl
+    collImg.dataset.backimgurl = card.backimgurl
 
     if (card.flavorName) {
       getByID("collection-card-name").textContent =
