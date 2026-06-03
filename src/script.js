@@ -18,6 +18,8 @@ const updateForm = getByID("updateForm")
 const updateBtn = getByID("updateBtn")
 const deleteBtn = getByID("deleteBtn")
 const randBtn = getByID("randSearch")
+const searchFlip = getByID("search-flip-btn")
+const collectionFlip = getByID("collection-flip-btn")
 const conditionSelect = updateForm.querySelector("select")
 const commentTextarea = updateForm.querySelector("textarea")
 const updateFoil = updateForm.querySelector("#updateFoil")
@@ -148,6 +150,14 @@ document.body.addEventListener("keydown", (e) => {
   }
 })
 
+searchFlip.addEventListener('click', () => {
+  flipImg(searchImg)
+})
+
+collectionFlip.addEventListener('click', () => {
+  flipImg(collImg)
+})
+
 getCollection()
 
 function cycleResults(direction) {
@@ -205,7 +215,7 @@ function appendSearch(card, id) {
 
   const rawOracle =
     card.oracle_text ??
-    [front.oracle_text, back.oracle_text].filter(Boolean).join("\n//\n")
+    [front.oracle_text, back.oracle_text].filter(Boolean).join("\n// ")
 
   const cardLi = createEle("li")
   let oracleText = (rawOracle ?? "").replace(/\n/g, ", ").replace(/\.,/g, ".")
@@ -213,6 +223,7 @@ function appendSearch(card, id) {
   let attributes = {
     "data-name": card.name,
     "data-imgurl": (card.image_uris ?? front.image_uris).normal ?? "",
+    "data-backimgurl": (card.image_uris ?? back.image_uris).normal ?? "",
     "data-set": card.set_name,
     "data-artist": pick("artist"),
     "data-flavor-text": pick("flavor_text") ?? "",
@@ -247,6 +258,14 @@ function appendSearch(card, id) {
 function displayCardInfo(cardLi, mode) {
   const card = { ...cardLi.dataset }
   const pArr = []
+
+  if(card.imgurl == card.backimgurl) {
+    if(mode == 'search') { searchFlip.hidden = true }
+    if(mode == 'collection') { collectionFlip.hidden = true }
+  } else {
+    if(mode == 'search') { searchFlip.hidden = false }
+    if(mode == 'collection') { collectionFlip.hidden = false }
+  }
 
   if (mode == "search") {
     pArr.push(...getByID("search-info-container").querySelectorAll("p"))
@@ -387,4 +406,9 @@ function manaify(text) {
     const cls = symbolToClass(sym)
     return `<i class="ms ms-${cls} ms-cost ms-shadow"></i>`
   })
+}
+
+function flipImg(imgEle) {
+  if(imgEle.src == imgEle.dataset.imgurl) { imgEle.src = imgEle.dataset.backimgurl }
+  else if(imgEle.src == imgEle.dataset.backimgurl) { imgEle.src = imgEle.dataset.imgurl }
 }
