@@ -184,7 +184,7 @@ function getCards(query) {
   fetch(`${scryURL}search?q=${query.replace(/ /g, "+")}`)
     .then((res) => res.json())
     .then((queryRes) => {
-      if ((queryRes.status = 404)) {
+      if ((queryRes.status === 404)) {
         alert(queryRes.details)
       } else {
         const cards = queryRes.data

@@ -1,11 +1,47 @@
+@font-face {
+  font-family: "MTGFont";
+  src: url("../assets/magicFont.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "MTGSymbols";
+  src: url("../assets/mtgsymbols.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* --- MTG color palette --- */
+:root {
+  --parchment:      #f4ead5;   /* card face / page bg */
+  --parchment-dark: #e8dcbe;   /* inset surfaces */
+  --frame-brown:    #2b1d10;   /* card frame black-brown */
+  --frame-mid:      #574231;   /* secondary borders */
+  --ink:            #1a1208;   /* body text */
+  --gold:           #c9a44c;   /* rare/mythic accent */
+  --gold-bright:    #e5c25a;   /* hover/active accent */
+  --mana-red:       #9b2226;   /* highlights */
+  --shadow:         0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
 /* --- Page layout --- */
 body {
   margin: 0 auto;
   padding: 1.5rem 1.5rem;
+  background:
+    radial-gradient(ellipse at top, #fbf3df 0%, var(--parchment) 60%, #ddc9a3 100%);
+  color: var(--ink);
+  font-family: "Georgia", "Times New Roman", serif;
+  min-height: 100vh;
 }
 
 h1 {
   margin: 0 0 1rem 0;
+  font-family: "MTGFont", "Georgia", serif;
+  font-size: 3rem;
+  letter-spacing: 0.04em;
+  color: var(--frame-brown);
+  text-shadow:
+    1px 1px 0 var(--gold),
+    2px 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 /* --- Search form --- */
@@ -19,15 +55,60 @@ h1 {
 
 #searchForm input[type="text"] {
   flex: 1 1 280px;
-  padding: 0.4rem 0.6rem;
+  padding: 0.5rem 0.7rem;
   font-size: 1rem;
+  font-family: inherit;
+  background: var(--parchment);
+  border: 1px solid var(--frame-mid);
+  border-radius: 4px;
+  color: var(--ink);
+}
+
+#searchForm input[type="text"]:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
 }
 
 #searchForm input[type="submit"],
-#searchForm input[type="button"] {
-  padding: 0.4rem 0.9rem;
+#searchForm input[type="button"],
+#addForm input[type="submit"],
+#updateForm input[type="submit"],
+#updateForm input[type="button"] {
+  padding: 0.45rem 1rem;
   font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 700;
   cursor: pointer;
+  color: var(--parchment);
+  background: linear-gradient(180deg, var(--frame-mid), var(--frame-brown));
+  border: 1px solid var(--frame-brown);
+  border-radius: 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), var(--shadow);
+  transition: transform 0.05s ease, background 0.15s ease, color 0.15s ease;
+}
+
+#searchForm input[type="submit"]:hover,
+#searchForm input[type="button"]:hover,
+#addForm input[type="submit"]:hover,
+#updateForm input[type="submit"]:hover,
+#updateForm input[type="button"]:hover {
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  color: var(--frame-brown);
+}
+
+#searchForm input[type="submit"]:active,
+#searchForm input[type="button"]:active {
+  transform: translateY(1px);
+}
+
+/* "Delete" button gets a red mana-style treatment */
+#deleteBtn {
+  background: linear-gradient(180deg, #b73237, var(--mana-red)) !important;
+  border-color: #5a1316 !important;
+}
+#deleteBtn:hover {
+  background: linear-gradient(180deg, #d44a4f, #a92327) !important;
+  color: var(--parchment) !important;
 }
 
 /* --- Two-column layout: results list + card info --- */
@@ -44,37 +125,50 @@ h1 {
   padding: 0;
   max-height: 70vh;
   overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  background: var(--parchment-dark);
+  border: 1px solid var(--frame-mid);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
 }
 
 #search-results li {
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid #eee;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid rgba(87, 66, 49, 0.25);
   cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+#search-results li:hover {
+  background: var(--gold);
+  color: var(--frame-brown);
 }
 
 #search-results li:last-child {
   border-bottom: none;
 }
 
-/* --- Card info panel --- */
+/* --- Card info panel (the "card frame") --- */
 .card-info-container {
   display: flex;
   gap: 1.25rem;
   align-items: flex-start;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 1.1rem;
+  background: var(--parchment);
+  border: 2px solid var(--frame-brown);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 1px var(--gold),
+    var(--shadow);
 }
 
 .card-img {
   width: 240px;
   max-width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 10px;
   display: block;
   flex-shrink: 0;
+  box-shadow: var(--shadow);
 }
 
 .card-text-container {
@@ -83,7 +177,13 @@ h1 {
 }
 
 .card-name {
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.85rem 0;
+  font-family: "MTGFont", "Georgia", serif;
+  font-size: 1.7rem;
+  color: var(--frame-brown);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 0.35rem;
+  letter-spacing: 0.02em;
 }
 
 .card-text-container > div {
@@ -99,30 +199,66 @@ h1 {
   font-size: 0.95rem;
   font-weight: 700;
   white-space: nowrap;
+  color: var(--mana-red);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .card-info-container p {
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.45;
   flex: 1;
   min-width: 0;
   word-wrap: break-word;
+  color: var(--ink);
 }
 
+/* --- Add / Update forms --- */
 #addForm {
   display: flex;
   gap: 20px;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--frame-mid);
 }
 
-#addForm textarea {
+#addForm textarea,
+#updateForm textarea {
   width: 35%;
   height: 4rem;
+  font-family: inherit;
+  background: var(--parchment-dark);
+  border: 1px solid var(--frame-mid);
+  border-radius: 4px;
+  padding: 0.4rem;
+  color: var(--ink);
+  resize: vertical;
 }
 
-.addFormOptions {
+#addForm textarea:focus,
+#updateForm textarea:focus,
+select:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+select {
+  font-family: inherit;
+  background: var(--parchment);
+  border: 1px solid var(--frame-mid);
+  border-radius: 4px;
+  padding: 0.25rem 0.4rem;
+  color: var(--ink);
+}
+
+.addFormOptions,
+#addFormOptions {
   display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
+/* --- Collection --- */
 #collection-container {
   display: grid;
   grid-template-columns: 1fr 1.75fr;
@@ -134,30 +270,43 @@ h1 {
 #card-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  padding: 0.5rem;
-  border: 1px dashed #ccc;
-  border-radius: 6px;
+  padding: 0.75rem;
+  background: var(--parchment-dark);
+  border: 2px dashed var(--frame-mid);
+  border-radius: 8px;
+  min-height: 160px;
 }
 
 #card-list img {
   width: 110px;
   max-width: 100%;
   height: auto;
-  border-radius: 4px;
+  border-radius: 6px;
   display: block;
   margin-bottom: 10px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.12s ease, outline-color 0.12s ease;
+  outline: 2px solid transparent;
 }
 
 #card-list img:hover {
-  outline: 2px solid #888;
+  outline-color: var(--gold-bright);
+  transform: translateY(-2px);
 }
 
-#updateForm > div{
+#updateForm > div {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.4rem;
   margin: 0.35rem 0;
+}
+
+#updateForm input[type="submit"],
+#updateForm input[type="button"] {
+  margin-top: 0.5rem;
+  margin-right: 0.4rem;
 }
 
 /* --- Responsive: stack on narrow screens --- */
