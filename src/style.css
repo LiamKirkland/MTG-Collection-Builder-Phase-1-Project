@@ -3,26 +3,19 @@
   src: url("../assets/magicFont.ttf") format("truetype");
   font-display: swap;
 }
-@font-face {
-  font-family: "MTGSymbols";
-  src: url("../assets/mtgsymbols.ttf") format("truetype");
-  font-display: swap;
-}
 
-/* --- MTG color palette --- */
 :root {
-  --parchment:      #f4ead5;   /* card face / page bg */
-  --parchment-dark: #e8dcbe;   /* inset surfaces */
-  --frame-brown:    #2b1d10;   /* card frame black-brown */
-  --frame-mid:      #574231;   /* secondary borders */
-  --ink:            #1a1208;   /* body text */
-  --gold:           #c9a44c;   /* rare/mythic accent */
-  --gold-bright:    #e5c25a;   /* hover/active accent */
-  --mana-red:       #9b2226;   /* highlights */
-  --shadow:         0 2px 6px rgba(0, 0, 0, 0.25);
+  --parchment: #f4ead5;
+  --parchment-dark: #e8dcbe;
+  --frame-brown: #2b1d10;
+  --frame-mid: #574231;
+  --ink: #1a1208;
+  --gold: #c9a44c;
+  --gold-bright: #e5c25a;
+  --mana-red: #9b2226;
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
-/* --- Page layout --- */
 body {
   margin: 0 auto;
   padding: 1.5rem 1.5rem;
@@ -44,7 +37,6 @@ h1 {
     2px 2px 6px rgba(0, 0, 0, 0.25);
 }
 
-/* --- Search form --- */
 #searchForm {
   display: flex;
   flex-wrap: wrap;
@@ -101,17 +93,16 @@ h1 {
   transform: translateY(1px);
 }
 
-/* "Delete" button gets a red mana-style treatment */
 #deleteBtn {
   background: linear-gradient(180deg, #b73237, var(--mana-red)) !important;
   border-color: #5a1316 !important;
 }
+
 #deleteBtn:hover {
   background: linear-gradient(180deg, #d44a4f, #a92327) !important;
   color: var(--parchment) !important;
 }
 
-/* --- Two-column layout: results list + card info --- */
 #search-container {
   display: grid;
   grid-template-columns: minmax(220px, 320px) 1fr;
@@ -131,6 +122,10 @@ h1 {
   box-shadow: var(--shadow);
 }
 
+#search-results:empty {
+  border: none;
+}
+
 #search-results li {
   padding: 0.55rem 0.8rem;
   border-bottom: 1px solid rgba(87, 66, 49, 0.25);
@@ -147,7 +142,6 @@ h1 {
   border-bottom: none;
 }
 
-/* --- Card info panel (the "card frame") --- */
 .card-info-container {
   display: flex;
   gap: 1.25rem;
@@ -186,7 +180,7 @@ h1 {
   letter-spacing: 0.02em;
 }
 
-.card-text-container > div {
+.card-text-container>div {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -213,18 +207,20 @@ h1 {
   color: var(--ink);
 }
 
-/* --- Add / Update forms --- */
+
 #addForm {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 35% 1fr;
+  gap: 0.75rem 20px;
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px dashed var(--frame-mid);
+  align-items: start;
 }
 
 #addForm textarea,
 #updateForm textarea {
-  width: 35%;
+  width: 100%;
   height: 4rem;
   font-family: inherit;
   background: var(--parchment-dark);
@@ -233,6 +229,12 @@ h1 {
   padding: 0.4rem;
   color: var(--ink);
   resize: vertical;
+  box-sizing: border-box;
+}
+
+#addForm input[type="submit"] {
+  grid-column: 1 / -1;
+  width: 100%;
 }
 
 #addForm textarea:focus,
@@ -254,11 +256,56 @@ select {
 .addFormOptions,
 #addFormOptions {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-self: stretch;
 }
 
-/* --- Collection --- */
+#addFormOptions>div {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#addFormOptions label {
+  font-weight: 700;
+  color: var(--frame-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+}
+
+#addFormOptions input[type="checkbox"] {
+  justify-self: start;
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--mana-red);
+  cursor: pointer;
+  margin: 0;
+}
+
+#addFormOptions #conSelector,
+#updateForm #updateCond {
+  width: max-content;
+  justify-self: start;
+  background: var(--parchment-dark);
+  color: var(--ink);
+  border-color: var(--frame-mid);
+}
+
+#addFormOptions #conSelector:hover,
+#updateForm #updateCond:hover {
+  background: #dcceac;
+}
+
+#addFormOptions #conSelector option,
+#updateForm #updateCond option {
+  background: var(--parchment);
+  color: var(--ink);
+}
+
+
 #collection-container {
   display: grid;
   grid-template-columns: 1fr 1.75fr;
@@ -295,7 +342,7 @@ select {
   transform: translateY(-2px);
 }
 
-#updateForm > div {
+#updateForm>div {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -309,7 +356,6 @@ select {
   margin-right: 0.4rem;
 }
 
-/* --- Responsive: stack on narrow screens --- */
 @media (max-width: 1050px) {
   #search-container {
     grid-template-columns: 1fr;
@@ -326,6 +372,10 @@ select {
   }
 
   #collection-container {
+    grid-template-columns: 1fr;
+  }
+
+  #addForm {
     grid-template-columns: 1fr;
   }
 }
