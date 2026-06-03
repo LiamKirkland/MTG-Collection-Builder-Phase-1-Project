@@ -1,8 +1,12 @@
 const scryURL = "https://api.scryfall.com/cards/"
-const dbURL = ""
+const dbURL = "http://localhost:3000/cardCollection/"
 
 const getByID = (id) => document.getElementById(id)
 const createEle = (tag) => document.createElement(tag)
+const collImgIndex = () =>
+  Array.from(collContainer.children).indexOf(
+    collContainer.querySelector(`[data-id='${collImg.dataset.cardId}']`),
+  )
 
 const searchForm = getByID("searchForm")
 const resultsUL = getByID("search-results")
@@ -29,9 +33,6 @@ searchForm.addEventListener("submit", (e) => {
 
 addForm.addEventListener("submit", (e) => {
   e.preventDefault()
-  const newCard = createEle("img")
-  newCard.src = searchImg.src
-
   if (!searchImg.dataset.name) {
     alert("Use the search to find a card to add!")
     return
@@ -43,19 +44,11 @@ addForm.addEventListener("submit", (e) => {
     print: "foil" in formData,
     artSize: "art" in formData,
     cardCondition: formData.condition,
+    src: searchImg.src,
     ...searchImg.dataset,
   }
 
-  for (const key in card) {
-    newCard.dataset[key] = card[key]
-  }
-
-  newCard.addEventListener("click", (e) => {
-    displayCardInfo(e.target, "collection")
-  })
-
-  newCard.id = "collection" + collContainer.childElementCount
-  collContainer.appendChild(newCard)
+  postCard(addToCollection(card))
   addForm.reset()
 })
 
@@ -80,12 +73,20 @@ updateForm.addEventListener("submit", (e) => {
   } else if (updateBtn.value == "Save") {
     exitEditMode()
 
-    const collectionCard = getByID(collImg.dataset.cardId)
+    const collectionCard = collContainer.children[collImgIndex()]
+    const updateValues = {
+      comment: formData.comment,
+      cardCondition: formData.condition,
+      print: `${"foil" in formData}`,
+      artSize: `${"art" in formData}`,
+    }
 
-    collectionCard.dataset["comment"] = formData.comment
-    collectionCard.dataset["cardCondition"] = formData.condition
-    collectionCard.dataset["print"] = "foil" in formData
-    collectionCard.dataset["artSize"] = "art" in formData
+    collectionCard.dataset["comment"] = updateValues.comment
+    collectionCard.dataset["cardCondition"] = updateValues.cardCondition
+    collectionCard.dataset["print"] = updateValues.print
+    collectionCard.dataset["artSize"] = updateValues.artSize
+
+    patchCard(updateValues, collImg.dataset.cardId)
 
     displayCardInfo(collectionCard, "collection")
   }
@@ -93,9 +94,16 @@ updateForm.addEventListener("submit", (e) => {
 
 deleteBtn.addEventListener("click", (e) => {
   if (deleteBtn.value == "Delete") {
-    if (confirm("Are you sure you want to delete this card from your collection? This action cannot be undone.")) {
-      getByID(collImg.dataset.cardId).remove()
-      for (const p of [...getByID("collection-text-info").querySelectorAll("p")]) {
+    if (
+      confirm(
+        "Are you sure you want to delete this card from your collection? This action cannot be undone.",
+      )
+    ) {
+      collContainer.children[collImgIndex()].remove()
+      deleteCard(collImg.dataset.cardId)
+      for (const p of [
+        ...getByID("collection-text-info").querySelectorAll("p"),
+      ]) {
         p.textContent = ""
       }
       getByID("collection-card-name").textContent = ""
@@ -108,22 +116,24 @@ deleteBtn.addEventListener("click", (e) => {
   }
 })
 
-document.body.addEventListener('keydown', e => {
-  switch(e.key) {
+document.body.addEventListener("keydown", (e) => {
+  switch (e.key) {
     case "ArrowUp":
       cycleResults(-1)
-      break;
+      break
     case "ArrowDown":
       cycleResults(1)
-      break;
+      break
     case "ArrowLeft":
       cycleCollection(-1)
-      break;
+      break
     case "ArrowRight":
       cycleCollection(1)
-      break;
+      break
   }
 })
+
+getCollection()
 
 function cycleResults(direction) {
   if (resultsUL.childElementCount > 0 && searchImg.dataset.cardId) {
@@ -139,13 +149,12 @@ function cycleResults(direction) {
 
 function cycleCollection(direction) {
   if (collContainer.childElementCount > 0 && collImg.dataset.cardId) {
-    let id = +collImg.dataset.cardId.slice(10) + direction
-    if (id >= 0 && id < collContainer.childElementCount) {
-      id = "collection" + id
-      displayCardInfo(getByID(id), "collection")
+    let index = collImgIndex() + direction
+    if (index >= 0 && index < collContainer.childElementCount) {
+      displayCardInfo(collContainer.children[index], "collection")
     }
   } else if (collContainer.childElementCount > 0 && !collImg.dataset.cardId) {
-    displayCardInfo(getByID("collection0"), "collection")
+    displayCardInfo(collContainer.children[0], "collection")
   }
 }
 
@@ -165,9 +174,7 @@ function getCards(query) {
       resultsUL.replaceChildren()
 
       cards.slice(0, 10).forEach((card, i) => {
-        console.log(card)
         const cardLi = createEle("li")
-
         let oracleText = card.oracle_text
           .replace(/\n/g, ", ")
           .replace(/\.,/g, ".")
@@ -232,7 +239,7 @@ function displayCardInfo(cardLi, mode) {
   if (mode == "collection") {
     pArr.push(...getByID("collection-info-container").querySelectorAll("p"))
     collImg.src = card.imgurl
-    collImg.setAttribute("data-card-id", cardLi.id)
+    collImg.dataset.cardId = cardLi.dataset.id
 
     if (card.flavorName) {
       getByID("collection-card-name").textContent =
@@ -240,7 +247,6 @@ function displayCardInfo(cardLi, mode) {
     } else {
       getByID("collection-card-name").textContent = card.name
     }
-    console.log(card)
     pArr[5].textContent = card.cardCondition
     pArr[6].textContent = card.print == "true" ? "Yes" : "No"
     pArr[7].textContent = card.artSize == "true" ? "Yes" : "No"
@@ -258,4 +264,68 @@ function displayCardInfo(cardLi, mode) {
       p.textContent = "None."
     }
   }
+}
+
+function postCard(cardEle) {
+  let cardObj = { ...cardEle.dataset }
+  delete cardObj.cardId
+  fetch(dbURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(cardObj),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      cardEle.dataset.id = data.id
+    })
+}
+
+function patchCard(updates, cardId) {
+  fetch(dbURL + cardId, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data)
+    })
+}
+
+function deleteCard(cardId) {
+  fetch(dbURL + cardId, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data)
+    })
+}
+
+function getCollection() {
+  fetch(dbURL)
+    .then((res) => res.json())
+    .then((collection) => {
+      for (const card of collection) {
+        addToCollection(card)
+      }
+    })
+}
+
+function addToCollection(cardObj) {
+  const newCard = createEle("img")
+  newCard.src = cardObj.imgurl
+
+  for (const key in cardObj) {
+    newCard.dataset[key] = cardObj[key]
+  }
+
+  newCard.addEventListener("click", (e) => {
+    displayCardInfo(e.target, "collection")
+  })
+
+  collContainer.appendChild(newCard)
+
+  return newCard
 }
