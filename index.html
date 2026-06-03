@@ -2,16 +2,17 @@
 <html>
 
 <head>
-  <title>MTG Collection Builder</title>
+  <title>SparkBinder</title>
   <link rel="stylesheet" href="./src/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mana-font@latest/css/mana.css">
 </head>
 
 <body>
-  <h1>Collection Builder</h1>
+  <h1>SparkBinder</h1>
   <form id="searchForm">
     <input type="text" name="query" minlength="3" placeholder="Search for a card..." autocomplete="off" required />
     <input type="submit" name="submit" value="Search" />
-    <input type="button" name="randSearch" value="Random" />
+    <input type="button" name="randSearch" value="Random" id="randSearch" />
   </form>
   <div id="search-container">
     <ul id="search-results"></ul>

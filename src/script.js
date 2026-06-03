@@ -17,6 +17,7 @@ const addForm = getByID("addForm")
 const updateForm = getByID("updateForm")
 const updateBtn = getByID("updateBtn")
 const deleteBtn = getByID("deleteBtn")
+const randBtn = getByID("randSearch")
 const conditionSelect = updateForm.querySelector("select")
 const commentTextarea = updateForm.querySelector("textarea")
 const updateFoil = updateForm.querySelector("#updateFoil")
@@ -116,6 +117,20 @@ deleteBtn.addEventListener("click", (e) => {
   }
 })
 
+randBtn.addEventListener("click", (e) => {
+  e.target.disabled = true
+  searchForm.reset()
+  addForm.reset()
+  fetch(scryURL + "random")
+    .then((res) => res.json())
+    .then((data) => {
+      resultsUL.replaceChildren()
+      appendSearch(data, 0)
+      displayCardInfo(resultsUL.children[0], "search")
+      e.target.disabled = false
+    })
+})
+
 document.body.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowUp":
@@ -170,49 +185,63 @@ function getCards(query) {
   fetch(`${scryURL}search?q=${query.replace(/ /g, "+")}`)
     .then((res) => res.json())
     .then((queryRes) => {
-      const cards = queryRes.data
-      resultsUL.replaceChildren()
-
-      cards.slice(0, 10).forEach((card, i) => {
-        const cardLi = createEle("li")
-        let oracleText = card.oracle_text
-          .replace(/\n/g, ", ")
-          .replace(/\.,/g, ".")
-
-        let attributes = {
-          "data-name": card.name,
-          "data-imgurl": card.image_uris.normal,
-          "data-set": card.set_name,
-          "data-artist": card.artist,
-          "data-flavor-text": card.flavor_text,
-          "data-oracle-text": oracleText,
-          "data-type-line": card.type_line,
-        }
-
-        if (card.flavor_name && card.flavor_name !== card.name) {
-          cardLi.textContent = card.flavor_name
-          oracleText = oracleText.replaceAll(card.name, card.flavor_name)
-          attributes["data-flavor-name"] = card.flavor_name
-
-          Object.entries(attributes).forEach(([tag, value]) => {
-            cardLi.setAttribute(tag, value)
-          })
-        } else {
-          cardLi.textContent = card.name
-          attributes["data-flavor-name"] = ""
-          Object.entries(attributes).forEach(([tag, value]) => {
-            cardLi.setAttribute(tag, value)
-          })
-        }
-
-        cardLi.id = "result" + i
-        cardLi.addEventListener("click", (e) => {
-          displayCardInfo(e.target, "search")
-          addForm.reset()
+      if (queryRes.status === 404) {
+        alert(queryRes.details)
+      } else {
+        const cards = queryRes.data
+        resultsUL.replaceChildren()
+        cards.slice(0, 10).forEach((card, i) => {
+          appendSearch(card, i)
         })
-        resultsUL.appendChild(cardLi)
-      })
+      }
     })
+}
+
+function appendSearch(card, id) {
+  const front = card.card_faces?.[0] ?? {}
+  const back = card.card_faces?.[1] ?? {}
+
+  const pick = (key) => card[key] ?? front[key]
+
+  const rawOracle =
+    card.oracle_text ??
+    [front.oracle_text, back.oracle_text].filter(Boolean).join("\n//\n")
+
+  const cardLi = createEle("li")
+  let oracleText = (rawOracle ?? "").replace(/\n/g, ", ").replace(/\.,/g, ".")
+
+  let attributes = {
+    "data-name": card.name,
+    "data-imgurl": (card.image_uris ?? front.image_uris).normal ?? "",
+    "data-set": card.set_name,
+    "data-artist": pick("artist"),
+    "data-flavor-text": pick("flavor_text") ?? "",
+    "data-oracle-text": oracleText,
+    "data-type-line": pick("type_line"),
+  }
+
+  if (card.flavor_name && card.flavor_name !== card.name) {
+    cardLi.textContent = card.flavor_name
+    oracleText = oracleText.replaceAll(card.name, card.flavor_name)
+    attributes["data-flavor-name"] = card.flavor_name
+
+    Object.entries(attributes).forEach(([tag, value]) => {
+      cardLi.setAttribute(tag, value)
+    })
+  } else {
+    cardLi.textContent = card.name
+    attributes["data-flavor-name"] = ""
+    Object.entries(attributes).forEach(([tag, value]) => {
+      cardLi.setAttribute(tag, value)
+    })
+  }
+
+  cardLi.id = "result" + id
+  cardLi.addEventListener("click", (e) => {
+    displayCardInfo(e.target, "search")
+    addForm.reset()
+  })
+  resultsUL.appendChild(cardLi)
 }
 
 function displayCardInfo(cardLi, mode) {
@@ -256,7 +285,7 @@ function displayCardInfo(cardLi, mode) {
   pArr[0].textContent = card.typeLine
   pArr[1].textContent = card.artist
   pArr[2].textContent = card.set
-  pArr[3].textContent = card.oracleText
+  pArr[3].innerHTML = manaify(card.oracleText)
   pArr[4].textContent = card.flavorText
 
   for (const p of pArr) {
@@ -328,4 +357,34 @@ function addToCollection(cardObj) {
   collContainer.appendChild(newCard)
 
   return newCard
+}
+
+// AI Written v, used in displayCardInfo() to convert text mana costs to symbols
+
+const MANA_CLASS_OVERRIDES = {
+  T: "tap",
+  Q: "untap",
+  CHAOS: "chaos",
+  E: "e",
+  PW: "pw",
+  TK: "tk",
+}
+
+function symbolToClass(sym) {
+  if (MANA_CLASS_OVERRIDES[sym]) return MANA_CLASS_OVERRIDES[sym]
+  return sym.toLowerCase().replace(/\//g, "")
+}
+
+function manaify(text) {
+  if (!text) return ""
+
+  const escaped = text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+
+  return escaped.replace(/\{([A-Z0-9/]+)\}/g, (_, sym) => {
+    const cls = symbolToClass(sym)
+    return `<i class="ms ms-${cls} ms-cost ms-shadow"></i>`
+  })
 }
