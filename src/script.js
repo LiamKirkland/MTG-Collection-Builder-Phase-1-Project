@@ -17,6 +17,7 @@ const addForm = getByID("addForm")
 const updateForm = getByID("updateForm")
 const updateBtn = getByID("updateBtn")
 const deleteBtn = getByID("deleteBtn")
+const randBtn = getByID("randSearch")
 const conditionSelect = updateForm.querySelector("select")
 const commentTextarea = updateForm.querySelector("textarea")
 const updateFoil = updateForm.querySelector("#updateFoil")
@@ -116,6 +117,18 @@ deleteBtn.addEventListener("click", (e) => {
   }
 })
 
+randBtn.addEventListener('click', e => {
+  e.target.disabled = true
+  fetch(scryURL + "random")
+  .then(res => res.json())
+  .then(data => {
+    resultsUL.replaceChildren()
+    appendSearch(data, 0)
+    displayCardInfo(resultsUL.children[0], 'search')
+    e.target.disabled = false
+  })
+})
+
 document.body.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "ArrowUp":
@@ -174,7 +187,13 @@ function getCards(query) {
       resultsUL.replaceChildren()
 
       cards.slice(0, 10).forEach((card, i) => {
-        const cardLi = createEle("li")
+        appendSearch(card, i)
+      })
+    })
+}
+
+function appendSearch(card, id) {
+  const cardLi = createEle("li")
         let oracleText = card.oracle_text
           .replace(/\n/g, ", ")
           .replace(/\.,/g, ".")
@@ -205,16 +224,13 @@ function getCards(query) {
           })
         }
 
-        cardLi.id = "result" + i
+        cardLi.id = "result" + id
         cardLi.addEventListener("click", (e) => {
           displayCardInfo(e.target, "search")
           addForm.reset()
         })
         resultsUL.appendChild(cardLi)
-      })
-    })
 }
-
 function displayCardInfo(cardLi, mode) {
   const card = { ...cardLi.dataset }
   const pArr = []
