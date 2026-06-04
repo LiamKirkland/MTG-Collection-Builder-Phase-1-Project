@@ -26,6 +26,7 @@ const updateFoil = updateForm.querySelector("#updateFoil")
 const updateArt = updateForm.querySelector("#updateArt")
 const updateInputs = [conditionSelect, commentTextarea, updateFoil, updateArt]
 const updatePs = () => [...updateForm.querySelectorAll("p")]
+const foilOverlay = getByID("collection-foil-overlay")
 
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault()
@@ -301,6 +302,12 @@ function displayCardInfo(cardLi, mode) {
     pArr[6].textContent = card.print == "true" ? "Yes" : "No"
     pArr[7].textContent = card.artSize == "true" ? "Yes" : "No"
     pArr[8].textContent = card.comment
+
+    if(card.print == "true") {
+      foilOverlay.hidden = false
+    } else {
+      foilOverlay.hidden = true
+    }
   }
 
   pArr[0].textContent = card.typeLine
