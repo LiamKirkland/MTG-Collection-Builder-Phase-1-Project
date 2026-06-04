@@ -10,7 +10,7 @@
 <body>
   <h1>SparkBinder</h1>
   <form id="searchForm">
-    <input type="text" name="query" minlength="3" placeholder="Search for a card..." autocomplete="off" required />
+    <input type="text" name="query" minlength="3" placeholder="Search for a card..." autocomplete="off" class="textInput" required />
     <input type="submit" name="submit" value="Search" />
     <input type="button" name="randSearch" value="Random" id="randSearch" />
   </form>
@@ -45,7 +45,7 @@
           </p>
         </div>
         <form id="addForm">
-          <textarea placeholder="Add a comment..." name="comment" autocomplete="off"></textarea>
+          <textarea placeholder="Add a comment..." name="comment" autocomplete="off" class="textInput"></textarea>
           <div id="addFormOptions">
             <div>
               <label>Foil</label>
@@ -130,7 +130,7 @@
           <div>
             <h4>Comment: </h4>
             <p id="collection-comment"></p>
-            <textarea placeholder="Add a comment..." name="comment" autocomplete="off" hidden></textarea>
+            <textarea placeholder="Add a comment..." name="comment" autocomplete="off" class="textInput" hidden></textarea>
           </div>
           <input type="submit" value="Update" id="updateBtn">
           <input type="button" name="delete" value="Delete" id="deleteBtn">
