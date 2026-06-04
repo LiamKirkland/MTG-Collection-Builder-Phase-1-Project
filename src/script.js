@@ -69,9 +69,7 @@ updateForm.addEventListener("submit", (e) => {
     updateInputs.forEach((el) => (el.hidden = false))
     conditionSelect.value = getByID("collection-condition").textContent
     updateForm.querySelector("textarea").value =
-      getByID("collection-comment").textContent == "None."
-        ? ""
-        : getByID("collection-comment").textContent
+      getByID("collection-comment").textContent == "None." ? "" : getByID("collection-comment").textContent
     updateFoil.checked = getByID("collection-foil").textContent === "Yes"
     updateArt.checked = getByID("collection-art").textContent === "Yes"
   } else if (updateBtn.value == "Save") {
@@ -326,6 +324,7 @@ function displayCardInfo(cardLi, mode) {
 function postCard(cardEle) {
   let cardObj = { ...cardEle.dataset }
   delete cardObj.cardId
+  delete cardObj.src
   fetch(dbURL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
