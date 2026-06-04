@@ -391,7 +391,7 @@ const tiltSettings = {
   max: 25,
   perspective: 1000,
   scale: 1.05,
-  foilShift: 18
+  foilShift: 35
 }
 
 const collWrapper = getByID("collection-img-wrapper")
@@ -422,8 +422,8 @@ function cardMouseMove(event) {
   card.style.transform = `perspective(${tiltSettings.perspective}px) rotateX(${tiltSettings.max*rotateX}deg) rotateY(${-tiltSettings.max*rotateY}deg) scale3d(${tiltSettings.scale}, ${tiltSettings.scale}, ${tiltSettings.scale})`
 
   if (card === collWrapper) {
-    const foilX = 13 - rotateX * (tiltSettings.foilShift / 2)
-    const foilY = 10 - rotateY  * (tiltSettings.foilShift / 2)
+    const foilX = 20 - rotateX * (tiltSettings.foilShift / 2)
+    const foilY = 20 - rotateY  * (tiltSettings.foilShift / 2)
     foilOverlay.style.objectPosition = `${foilX}% ${foilY}%`
   }
 }
@@ -435,7 +435,7 @@ function cardMouseLeave(event) {
   if(event.currentTarget === collWrapper) {
     setTransition(foilOverlay)
     foilOverlay.style.transform = `translate3d(0, 0, 1px)`
-    foilOverlay.style.objectPosition = "13% 10%"
+    foilOverlay.style.objectPosition = "20% 20%"
   }
 }
 
