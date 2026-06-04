@@ -27,6 +27,7 @@ const updateArt = updateForm.querySelector("#updateArt")
 const updateInputs = [conditionSelect, commentTextarea, updateFoil, updateArt]
 const updatePs = () => [...updateForm.querySelectorAll("p")]
 const foilOverlay = getByID("collection-foil-overlay")
+const textInputs = [...document.getElementsByClassName("textInput")]
 
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault()
@@ -133,19 +134,21 @@ randBtn.addEventListener("click", (e) => {
 })
 
 document.body.addEventListener("keydown", (e) => {
-  switch (e.key) {
-    case "ArrowUp":
-      cycleResults(-1)
-      break
-    case "ArrowDown":
-      cycleResults(1)
-      break
-    case "ArrowLeft":
-      cycleCollection(-1)
-      break
-    case "ArrowRight":
-      cycleCollection(1)
-      break
+  if (!textInputs.includes(document.activeElement)) {
+    switch (e.key) {
+      case "ArrowUp":
+        cycleResults(-1)
+        break
+      case "ArrowDown":
+        cycleResults(1)
+        break
+      case "ArrowLeft":
+        cycleCollection(-1)
+        break
+      case "ArrowRight":
+        cycleCollection(1)
+        break
+    }
   }
 })
 
@@ -257,6 +260,7 @@ function appendSearch(card, id) {
 function displayCardInfo(cardLi, mode) {
   const card = { ...cardLi.dataset }
   const pArr = []
+  exitEditMode()
 
   if(card.imgurl == card.backimgurl) {
     if(mode == 'search') { searchFlip.hidden = true }
