@@ -429,19 +429,18 @@ function cardMouseMove(event) {
 }
 
 function cardMouseLeave(event) {
-  event.currentTarget.style.transform =`perspective(${tiltSettings.perspective}px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`
   setTransition(event.currentTarget)
+  event.currentTarget.style.transform =`perspective(${tiltSettings.perspective}px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`
 
   if(event.currentTarget === collWrapper) {
+    setTransition(foilOverlay)
     foilOverlay.style.transform = `translate3d(0, 0, 1px)`
     foilOverlay.style.objectPosition = "13% 10%"
-    setTransition(foilOverlay)
   }
 }
 
 function setTransition(card) {
-  card.style.transition = "transform 300ms cubic-bezier(0.03, 0.98, 0.52, 0.99)" +
-    "object-position 300ms cubic-bezier(0.03, 0.98, 0.52, 0.99)"
+  card.style.transition = "transform 300ms cubic-bezier(0.03, 0.98, 0.52, 0.99)," + "object-position 300ms cubic-bezier(0.03, 0.98, 0.52, 0.99)"
   setTimeout(() => {
     card.style.transition = ""
   }, 300)
