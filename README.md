@@ -1,6 +1,12 @@
 # SparkBinder
 As a user, I want the ability to search for MTG cards via [Scryfall's API](https://scryfall.com/docs/api). Then I want to give additional info (like print type, art style, conndition, and a comment) before adding it to my collection. I would like this collection to persist across sessions as a way to track and manage my collection
 
+### <u>User Notes</u>
+- Ensure you have a json-server installed
+  - This can be done by running `npm install -g json-server`
+- Have the json-server watch the `db.json` file to ensure the collection features work as expected
+  - Run `json-server --watch db.json` in the project directory to do this
+
 ### <u>Core Features</u>
 - *Search Functionality*
   - Search results should return the first 10 cards found by Scryfall's query

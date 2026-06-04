@@ -386,6 +386,51 @@ function addToCollection(cardObj) {
   return newCard
 }
 
+// Used a YT tutorial for this
+const tiltSettings = {
+  max: 25,
+  perspective: 1000,
+  scale: 1.05
+}
+
+searchImg.addEventListener('mouseenter', cardMouseEnter)
+searchImg.addEventListener('mousemove', cardMouseMove)
+searchImg.addEventListener('mouseleave', cardMouseLeave)
+
+collImg.addEventListener('mouseenter', cardMouseEnter)
+collImg.addEventListener('mousemove', cardMouseMove)
+collImg.addEventListener('mouseleave', cardMouseLeave)
+
+function cardMouseEnter(event) {
+  setTransition(event.target)
+}
+
+function cardMouseMove(event) {
+  const card = event.target
+  const cardWidth = card.offsetWidth
+  const cardHeight = card.offsetHeight
+  const centerX = card.offsetLeft + cardWidth / 2
+  const centerY = card.offsetTop + cardHeight / 2
+  const mouseX = event.clientX - centerX
+  const mouseY = event.clientY - centerY
+  const rotateX = tiltSettings.max*mouseY/(cardHeight/2).toFixed(2)
+  const rotateY = -tiltSettings.max*mouseX/(cardWidth/2).toFixed(2)
+
+  card.style.transform = `perspective(${tiltSettings.perspective}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${tiltSettings.scale}, ${tiltSettings.scale}, ${tiltSettings.scale})`
+}
+
+function cardMouseLeave(event) {
+  event.target.style.transform =`perspective(${tiltSettings.perspective}px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`
+  setTransition(event.target)
+}
+
+function setTransition(card) {
+  card.style.transition = "transform 300ms cubic-bezier(0.03, 0.98, 0.52, 0.99)"
+  setTimeout(() => {
+    card.style.transition = ""
+  }, 300)
+}
+
 // AI Written v, used in displayCardInfo() to convert text mana costs to symbols
 
 const MANA_CLASS_OVERRIDES = {
