@@ -180,12 +180,6 @@ h1 {
   display: block;
 }
 
-#collection-card-img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 #collection-foil-overlay {
   position: absolute;
   top: 0;
@@ -194,8 +188,11 @@ h1 {
   height: 100%;
   border-radius: 10px;
   pointer-events: none;
-  object-fit: fill;
+  object-fit: none;
+  object-position: 20% 20%;
   opacity: 0.3;
+  transform: translateZ(1px); 
+  will-change: object-position, opacity;
 }
 
 .card-img {
