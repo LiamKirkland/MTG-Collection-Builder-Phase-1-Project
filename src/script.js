@@ -49,11 +49,10 @@ addForm.addEventListener("submit", (e) => {
     print: "foil" in formData,
     artSize: "art" in formData,
     cardCondition: formData.condition,
-    src: searchImg.src,
     ...searchImg.dataset,
   }
 
-  postCard(addToCollection(card))
+  postCard(card)
   addForm.reset()
 })
 
@@ -96,7 +95,7 @@ updateForm.addEventListener("submit", (e) => {
 })
 
 deleteBtn.addEventListener("click", (e) => {
-  if (deleteBtn.value == "Delete") {
+  if (deleteBtn.value == "Delete" && collContainer.children[collImgIndex()]) {
     if (
       confirm(
         "Are you sure you want to delete this card from your collection? This action cannot be undone.",
@@ -129,6 +128,12 @@ randBtn.addEventListener("click", (e) => {
       resultsUL.replaceChildren()
       appendSearch(data, 0)
       displayCardInfo(resultsUL.children[0], "search")
+    })
+    .catch(err => {
+      alert("API Failed, try again.")
+      console.log(err)
+    })
+    .finally(() => {
       e.target.disabled = false
     })
 })
@@ -325,10 +330,7 @@ function displayCardInfo(cardLi, mode) {
   }
 }
 
-function postCard(cardEle) {
-  let cardObj = { ...cardEle.dataset }
-  delete cardObj.cardId
-  delete cardObj.src
+function postCard(cardObj) {
   fetch(dbURL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -336,7 +338,11 @@ function postCard(cardEle) {
   })
     .then((res) => res.json())
     .then((data) => {
-      cardEle.dataset.id = data.id
+      cardObj.id = data.id
+      addToCollection(cardObj)
+    })
+    .catch(err => {
+      alert("Could not add card, try again.")
     })
 }
 
